@@ -1,2 +1,2 @@
-# movement-graphs
-Interactive visual analysis systems for movement data modeled as graphs
+# geospatial-graphs
+Interactive visual analysis systems for geospatial data modeled as graphs
