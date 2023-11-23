@@ -2,7 +2,8 @@
   "name": "geospatial-graphs",
   "version": "1.0.0",
   "description": "Library for analyzing trajectory data as geospatial-graphs",
-  "main": "index.js",
+  "main": "app.js",
+  "type": "module",
   "directories": {
     "test": "test"
   },

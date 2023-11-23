@@ -1,12 +1,28 @@
-const express = require("express");
+import { port } from "./utility.js"
+import { Database } from "./database.js"
 
-const app = express();
-const port = 8000;
+import express from "express"
 
-app.get("/", function (req, res) {
+function indexFunction(req, res) {
     res.send("Hello World!");
-}); 
+} 
 
-app.listen(port, function () {
+function listener() {
     console.log(`Example app listening on port ${port}!`);
-});
+}
+
+class Server {
+    static app = null;
+    static db = null;
+    
+    constructor() {
+        this.db = new Database();
+        this.app = express();
+
+        // register route methods for server
+        this.app.get("/", indexFunction);
+        this.app.listen(port, listener);
+    }
+}
+
+export { Server };

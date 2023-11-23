@@ -1,33 +1,44 @@
-const duckdb = require("duckdb");
+import duckdb from "duckdb"
 
-const db = new duckdb.Database(':memory:', (err) => {
-    if (err) throw err;
-});
+class Database {
+    static db = null;
 
-db.run('CREATE TABLE nodes AS FROM "../data/iwc/nodes.csv"', function(err, res) {
-    if (err) {
-        console.log(err);
-        throw err;
+    constructor(nodesFilePath, edgesFilePath) {
+        this.db = new duckdb.Database(':memory:', (err) => {
+            if (err) {
+                throw err;
+                console.log(err);
+            }
+
+            // this.db.run('CREATE TABLE nodes AS FROM ?', nodesFilePath, function(err) {
+            //     if (err) {
+            //         console.log(err);
+            //         throw err;
+            //     }
+            //     db.all('SELECT * FROM nodes', function (err, res) {
+            //         if (err) {
+            //             console.log(err);
+            //             throw err;
+            //         }
+            //         console.log(f`Loaded ${res.length} rows in nodes`);
+            //     });
+            // });
+
+            // this.db.run('CREATE TABLE edges AS FROM ?', edgesFilePath, function(err) {
+            //     if (err) {
+            //         console.log(err);
+            //         throw err;
+            //     }
+            //     db.all('SELECT * FROM edges', function (err, res) {
+            //         if (err) {
+            //             console.log(err);
+            //             throw err;
+            //         }
+            //         console.log(f`Loaded ${res.length} rows in edges`);
+            //     });
+            // });
+        });
     }
-    db.all('SELECT * FROM nodes', function (err, res) {
-        if (err) {
-            console.log(err);
-            throw err;
-        }
-        console.log(res);
-    });
-});
+}
 
-db.run('CREATE TABLE edges AS FROM "../data/iwc/edges.csv"', function(err, res) {
-    if (err) {
-        console.log(err);
-        throw err;
-    }
-    db.all('SELECT * FROM edges', function (err, res) {
-        if (err) {
-            console.log(err);
-            throw err;
-        }
-        console.log(res[0]);
-    });
-});
+export { Database };
