@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  padding: 0 3em;
+}
+
+header {
+  margin: 2em 0;
+}
+
+#map {
+  height: 70vh;
+}
