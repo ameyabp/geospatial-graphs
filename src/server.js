@@ -8,15 +8,15 @@ function indexFunction(req, res) {
 } 
 
 function listener() {
-    console.log(`Example app listening on port ${port}!`);
+    console.log(`Geospatial-graphs listening on port ${port}!`);
 }
 
 class Server {
     static app = null;
     static db = null;
     
-    constructor() {
-        this.db = new Database();
+    constructor(nodesFilePath, edgesFilePath) {
+        this.db = new Database(nodesFilePath, edgesFilePath);
         this.app = express();
 
         // register route methods for server

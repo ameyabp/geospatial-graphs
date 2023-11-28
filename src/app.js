@@ -3,4 +3,4 @@
 */
 import { Server } from "./server.js"
 
-const server = new Server();
+const server = new Server("../data/iwc/nodes.csv", "../data/iwc/edges.csv");
