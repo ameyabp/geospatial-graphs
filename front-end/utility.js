@@ -1,5 +1,7 @@
 "use strict";
 
+export const port = 8000;
+
 /**
  * Check whether the fetch operation successes.
  * @param {object} response response object returned by server.
