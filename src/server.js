@@ -1,45 +1,49 @@
-import { port, frontendDir } from "./utility.js"
-import { Database } from "./database.js"
+import { port, frontendDir, inLogger } from "./utility.js"
 
 import express from "express"
 
-function indexFunction(req, res) {
-    // res.send("Hello World!");
-    const options = {
-        root: frontendDir
-    }
-    res.sendFile("index.html", options, (err) => {
-        if (err) {
-            console.log(err);
-            throw err;
-        }
-        else {
-            console.log("Sent index.html")
-        }
-    });
-} 
-
-function getData(req, res) {
-    console.log("Fetching data from DB");
-}
-
-function listener() {
-    console.log(`Geospatial-graphs listening on port ${port}!`);
-}
+// refer https://expressjs.com/en/4x/api.html#req for how to process incoming HTTPRequest
+// refer https://expressjs.com/en/4x/api.html#res for how to prepare outgoing HTTPResponse
 
 class Server {
-    static app = null;
-    static db = null;
+    app = null;
+    db = null;
+
+    index(request, response) {
+        logger(request);
+        const options = {
+            root: frontendDir   // for convenience in specifying the index file path
+        }
+        response.sendFile("index.html", options, (err) => {
+            if (err) throw err;
+        });
+    } 
     
-    constructor(nodesFilePath, edgesFilePath) {
-        this.db = new Database(nodesFilePath, edgesFilePath);
+    getNodes(request, response, db) {
+        inLogger(request);
+        db.getNodes(request, response);
+    }
+
+    getEdges(request, response, db) {
+        inLogger(request);
+        db.getEdges(request, response);
+    }
+    
+    listener() {
+        console.log(`Geospatial-graphs listening on port ${port}!`);
+    }
+
+    constructor(databaseInstance, handler) {
+        this.db = databaseInstance;
         this.app = express();
         this.app.use(express.static(frontendDir));
+        this.app.use(express.json());
 
         // register route methods for server
-        this.app.get("/", indexFunction);
-        this.app.post("/", getData);
-        this.app.listen(port, listener);
+        this.app.get("/", this.index);
+        this.app.post("/getNodes", (request, response) => this.getNodes(request, response, this.db));
+        this.app.post("/getEdges", (request, response) => this.getEdges(request, response, this.db));
+        this.app.listen(port, this.listener);
     }
 }
 

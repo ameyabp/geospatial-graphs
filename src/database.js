@@ -1,8 +1,8 @@
 import duckdb from "duckdb"
+import { outLogger } from "./utility.js";
 
 class Database {
-    static db = null;
-    static conn = null;
+    db = null;
 
     constructor(nodesFilePath, edgesFilePath) {
         this.db = new duckdb.Database(':memory:', (err) => {
@@ -27,6 +27,30 @@ class Database {
             }
             console.log("Loaded edges");
         });
+    }
+
+    getNodes(request, response) {
+        const bbox = request.body;
+        const connection = this.db.connect();
+        connection.all('SELECT * FROM nodes WHERE lon BETWEEN ? AND ? AND lat BETWEEN ? AND ?', 
+                    bbox.min_lon, bbox.max_lon, bbox.min_lat, bbox.max_lat, 
+                    (err, res) => {
+                        if (err) throw err;
+                        response.json(res);
+                        outLogger(request);
+                    });
+    }
+
+    getEdges(request, response) {
+        const bbox = request.body;
+        const connection = this.db.connect();
+        connection.all('SELECT * FROM edges WHERE (srcLon BETWEEN ? AND ? AND srcLat BETWEEN ? AND ?) OR (dstLon BETWEEN ? AND ? AND dstLat BETWEEN ? AND ?)',
+                    bbox.min_lon, bbox.max_lon, bbox.min_lat, bbox.max_lat, bbox.min_lon, bbox.max_lon, bbox.min_lat, bbox.max_lat,
+                    (err, res) => {
+                        if (err) throw err;
+                        response.json(res);
+                        outLogger(request);
+                    });
     }
 }
 
