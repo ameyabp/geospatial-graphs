@@ -3,6 +3,25 @@
 export const port = 8000;
 
 /**
+ * 
+ * @param {object[]} array Array of objects
+ * @param {number} size Size of sample
+ * @returns {object[]} A random sample of given object of given size
+ */
+function getRandomSample(array, size) {
+    if (array.length < size) {
+        return array;
+    }
+
+    const shuffledArray = array.slice();
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray.slice(0, size);
+}
+
+/**
  * Check whether the fetch operation successes.
  * @param {object} response response object returned by server.
  * @returns {boolean} true if the fetch operation successes
@@ -49,3 +68,5 @@ function qsa(selector) {
 function gen(tagName) {
     return document.createElement(tagName);
 }
+
+export {getRandomSample, statusCheck, id, qs, qsa, gen};
